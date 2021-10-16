@@ -1,18 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 public class BubbleMechanics : MonoBehaviour
 {
     public delegate void BurstHandler();
 
     public delegate void OnClickHandler(GameObject gameObject);
-
-    public event BurstHandler BurstEvent;
-    public event OnClickHandler OnClickEvent;
 
     [SerializeField] private float speedGrowUp = 1;
 
@@ -21,13 +13,26 @@ public class BubbleMechanics : MonoBehaviour
     [SerializeField] private Vector2 endScale = new Vector2(1f, 1f);
 
 
-    private float _growPercent = 0.0f;
+    private float _growPercent;
     private SpriteRenderer _sr;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         transform.localScale = startScale;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (transform.localScale.Equals(endScale))
+        {
+            BurstEvent?.Invoke();
+            gameObject.SetActive(false);
+        }
+
+        _growPercent += Time.deltaTime * speedGrowUp;
+        transform.localScale = Vector2.Lerp(startScale, endScale, _growPercent);
     }
 
     private void OnEnable()
@@ -42,23 +47,12 @@ public class BubbleMechanics : MonoBehaviour
         _growPercent = 0.0f;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (transform.localScale.Equals(endScale))
-        {
-            BurstEvent?.Invoke();
-            gameObject.SetActive(false);
-        }
-
-        _growPercent += Time.deltaTime * speedGrowUp;
-        transform.localScale = Vector2.Lerp(startScale, endScale, _growPercent);
-    }
-
     private void OnMouseDown()
     {
         OnClickEvent?.Invoke(gameObject);
         gameObject.SetActive(false);
     }
-    
+
+    public event BurstHandler BurstEvent;
+    public event OnClickHandler OnClickEvent;
 }

@@ -7,36 +7,33 @@ public class GameControllerMechanics : MonoBehaviour
 
     public delegate void StateGameChangedHandler(bool state);
 
-    public event ScoreUpdateHandler ScoreUpdateEvent;
-    public event StateGameChangedHandler StateGameChangedEvent;
-
     [SerializeField] private GameObject prefab;
 
     [SerializeField] private Camera _camera;
 
-    [SerializeField] private float rate;
-
     [SerializeField] private float percentOffset;
 
-    [SerializeField] private Vector2 maxSize;
+    [SerializeField] private float rate;
 
-    private float _curTime = 0f;
-    private int score = 0;
-    private bool game = true;
-    private Stack<GameObject> poolObjects = new Stack<GameObject>();
-    private HashSet<GameObject> activeObjects = new HashSet<GameObject>();
+    //[SerializeField] private Vector2 maxSize;
+
+    private float _curTime;
+    private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
+    private bool _game = true;
+    private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
+    private int _score;
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         StateGameChangedEvent?.Invoke(true);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (!game)
+        if (!_game)
         {
             if (Input.GetKeyDown(KeyCode.Space)) RestartGame();
         }
@@ -51,26 +48,25 @@ public class GameControllerMechanics : MonoBehaviour
         }
     }
 
+    public event ScoreUpdateHandler ScoreUpdateEvent;
+    public event StateGameChangedHandler StateGameChangedEvent;
+
     private void RestartGame()
     {
         _curTime = 0.0f;
-        score = 0;
-        ScoreUpdateEvent?.Invoke(score);
-        game = true;
-        StateGameChangedEvent?.Invoke(game);
+        _score = 0;
+        ScoreUpdateEvent?.Invoke(_score);
+        _game = true;
+        StateGameChangedEvent?.Invoke(_game);
     }
 
     private void SpawnBubble()
     {
         GameObject bubble;
-        if (poolObjects.Count == 0)
-        {
+        if (_poolObjects.Count == 0)
             bubble = CreateBubble();
-        }
         else
-        {
-            bubble = poolObjects.Pop();
-        }
+            bubble = _poolObjects.Pop();
 
         var position = _camera.ScreenToWorldPoint(
             new Vector2(
@@ -82,38 +78,39 @@ public class GameControllerMechanics : MonoBehaviour
 
         bubble.transform.SetPositionAndRotation(position, Quaternion.identity);
         bubble.SetActive(true);
-        
-        activeObjects.Add(bubble);
+
+        _activeObjects.Add(bubble);
     }
 
     private GameObject CreateBubble()
     {
         var go = Instantiate(prefab);
-        var instGM = go.GetComponent<BubbleMechanics>();
-        instGM.OnClickEvent += AddScore;
-        instGM.BurstEvent += EndGame;
+        var gm = go.GetComponent<BubbleMechanics>();
+        gm.OnClickEvent += AddScore;
+        gm.BurstEvent += EndGame;
         return go;
     }
 
     private void EndGame()
     {
-        game = false;
-        
-        foreach (var go in activeObjects)
+        _game = false;
+
+        foreach (var go in _activeObjects)
         {
             go.SetActive(false);
-            poolObjects.Push(go);
+            _poolObjects.Push(go);
         }
-        activeObjects.Clear();
-        
-        StateGameChangedEvent?.Invoke(game);
+
+        _activeObjects.Clear();
+
+        StateGameChangedEvent?.Invoke(_game);
     }
 
-    private void AddScore(GameObject gameObject)
+    private void AddScore(GameObject go)
     {
-        ++score;
-        activeObjects.Remove(gameObject);
-        poolObjects.Push(gameObject);
-        ScoreUpdateEvent?.Invoke(score);
+        ++_score;
+        _activeObjects.Remove(go);
+        _poolObjects.Push(go);
+        ScoreUpdateEvent?.Invoke(_score);
     }
 }
