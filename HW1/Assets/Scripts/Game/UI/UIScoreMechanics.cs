@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Text))]
-public class UIMechanics : MonoBehaviour
+public class UIScoreMechanics : MonoBehaviour
 {
     private Text _st;
     [SerializeField] private GameObject gameController;
@@ -13,7 +13,7 @@ public class UIMechanics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameController.GetComponent<MainMechanics>().ScoreUpdateEvent += UpdateScoreHandle;
+        gameController.GetComponent<GameControllerMechanics>().ScoreUpdateEvent += UpdateScoreHandle;
     }
 
     private void OnValidate()

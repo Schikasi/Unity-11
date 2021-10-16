@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using log4net.Core;
 using UnityEngine;
 
-public class MainMechanics : MonoBehaviour
+public class GameControllerMechanics : MonoBehaviour
 {
     public delegate void ScoreUpdateHandler(int value);
 
-    public delegate void GameOverHandler();
+    public delegate void StateGameChangedHandler(bool state);
 
     public event ScoreUpdateHandler ScoreUpdateEvent;
-    public event GameOverHandler GameOverEvent;
+    public event StateGameChangedHandler StateGameChangedEvent;
 
     [SerializeField] private GameObject prefab;
 
@@ -32,18 +32,34 @@ public class MainMechanics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StateGameChangedEvent?.Invoke(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!game) return;
-        _curTime = Mathf.Clamp(_curTime + Time.deltaTime, 0, rate);
-        if (_curTime.Equals(rate))
+        if (!game)
         {
-            _curTime = 0.0f;
-            SpawnBubble();
+            if (Input.GetKey(KeyCode.Space)) RestartGame();
         }
+        else
+        {
+            _curTime = Mathf.Clamp(_curTime + Time.deltaTime, 0, rate);
+            if (_curTime.Equals(rate))
+            {
+                _curTime = 0.0f;
+                SpawnBubble();
+            }
+        }
+    }
+
+    private void RestartGame()
+    {
+        _curTime = 0.0f;
+        score = 0;
+        ScoreUpdateEvent?.Invoke(score);
+        game = true;
+        StateGameChangedEvent?.Invoke(game);
     }
 
     private void SpawnBubble()
@@ -74,7 +90,7 @@ public class MainMechanics : MonoBehaviour
     private GameObject CreateBubble()
     {
         var go = Instantiate(prefab);
-        var instGM = go.GetComponent<GrowMechanics>();
+        var instGM = go.GetComponent<BubbleMechanics>();
         instGM.OnClickEvent += AddScore;
         instGM.BurstEvent += EndGame;
         return go;
@@ -87,7 +103,7 @@ public class MainMechanics : MonoBehaviour
         {
             activeObjects.Pop().SetActive(false);
         }
-        GameOverEvent?.Invoke();
+        StateGameChangedEvent?.Invoke(game);
     }
 
     private void AddScore(GameObject gameObject)

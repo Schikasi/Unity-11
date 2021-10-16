@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108e089a28c94324f86b4a37fa73b9b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedGrowUp: 0.1
+  speedGrowUp: 0.5
   startScale: {x: 0.1, y: 0.1}
-  endScale: {x: 5, y: 5}
+  endScale: {x: 4, y: 4}
 --- !u!58 &4448974283655905167
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -114,4 +114,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.5025126

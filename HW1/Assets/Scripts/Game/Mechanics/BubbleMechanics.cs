@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class GrowMechanics : MonoBehaviour
+public class BubbleMechanics : MonoBehaviour
 {
     public delegate void BurstHandler();
 
