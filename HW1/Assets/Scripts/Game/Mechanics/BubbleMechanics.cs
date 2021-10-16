@@ -6,6 +6,8 @@ public class BubbleMechanics : MonoBehaviour
 
     public delegate void OnClickHandler(GameObject gameObject);
 
+    [Range(0.1f,1f)]
+    [Tooltip("Grow up percent per second")]
     [SerializeField] private float speedGrowUp = 1;
 
     [SerializeField] private Vector2 startScale = new Vector2(0.1f, 0.1f);
@@ -30,9 +32,11 @@ public class BubbleMechanics : MonoBehaviour
             BurstEvent?.Invoke();
             gameObject.SetActive(false);
         }
-
-        _growPercent += Time.deltaTime * speedGrowUp;
-        transform.localScale = Vector2.Lerp(startScale, endScale, _growPercent);
+        else
+        {
+            _growPercent += Time.deltaTime * speedGrowUp;
+            transform.localScale = Vector2.Lerp(startScale, endScale, _growPercent);
+        }
     }
 
     private void OnEnable()

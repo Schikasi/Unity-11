@@ -62,11 +62,7 @@ public class GameControllerMechanics : MonoBehaviour
 
     private void SpawnBubble()
     {
-        GameObject bubble;
-        if (_poolObjects.Count == 0)
-            bubble = CreateBubble();
-        else
-            bubble = _poolObjects.Pop();
+        var bubble = _poolObjects.Count == 0 ? CreateBubble() : _poolObjects.Pop();
 
         var position = _camera.ScreenToWorldPoint(
             new Vector2(
