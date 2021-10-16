@@ -27,18 +27,19 @@ public class BubbleMechanics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    }
-
-    private void Awake()
-    {
-        _sr = GetComponent<SpriteRenderer>();
+        transform.localScale = startScale;
     }
 
     private void OnEnable()
     {
+        _sr ??= GetComponent<SpriteRenderer>();
+        _sr.color = Random.ColorHSV(0f, 1f, 0.7f, 0.85f, 0.7f, 1f, 0.65f, 0.8f);
+    }
+
+    private void OnDisable()
+    {
         transform.localScale = startScale;
         _growPercent = 0.0f;
-        _sr.color = Random.ColorHSV(0f, 1f, 0.7f, 0.85f, 0.7f, 1f, 0.65f, 0.8f);
     }
 
     // Update is called once per frame
@@ -59,4 +60,5 @@ public class BubbleMechanics : MonoBehaviour
         OnClickEvent?.Invoke(gameObject);
         gameObject.SetActive(false);
     }
+    
 }

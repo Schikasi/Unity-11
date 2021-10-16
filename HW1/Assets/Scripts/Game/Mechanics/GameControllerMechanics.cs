@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using log4net.Core;
 using UnityEngine;
 
 public class GameControllerMechanics : MonoBehaviour
@@ -26,7 +24,7 @@ public class GameControllerMechanics : MonoBehaviour
     private int score = 0;
     private bool game = true;
     private Stack<GameObject> poolObjects = new Stack<GameObject>();
-    private Stack<GameObject> activeObjects = new Stack<GameObject>();
+    private HashSet<GameObject> activeObjects = new HashSet<GameObject>();
 
 
     // Start is called before the first frame update
@@ -40,7 +38,7 @@ public class GameControllerMechanics : MonoBehaviour
     {
         if (!game)
         {
-            if (Input.GetKey(KeyCode.Space)) RestartGame();
+            if (Input.GetKeyDown(KeyCode.Space)) RestartGame();
         }
         else
         {
@@ -84,7 +82,8 @@ public class GameControllerMechanics : MonoBehaviour
 
         bubble.transform.SetPositionAndRotation(position, Quaternion.identity);
         bubble.SetActive(true);
-        activeObjects.Push(bubble);
+        
+        activeObjects.Add(bubble);
     }
 
     private GameObject CreateBubble()
@@ -99,16 +98,21 @@ public class GameControllerMechanics : MonoBehaviour
     private void EndGame()
     {
         game = false;
-        while (activeObjects.Count !=0)
+        
+        foreach (var go in activeObjects)
         {
-            activeObjects.Pop().SetActive(false);
+            go.SetActive(false);
+            poolObjects.Push(go);
         }
+        activeObjects.Clear();
+        
         StateGameChangedEvent?.Invoke(game);
     }
 
     private void AddScore(GameObject gameObject)
     {
         ++score;
+        activeObjects.Remove(gameObject);
         poolObjects.Push(gameObject);
         ScoreUpdateEvent?.Invoke(score);
     }

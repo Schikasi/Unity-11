@@ -13,14 +13,10 @@ public class UIScoreMechanics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _st = GetComponent<Text>();
         gameController.GetComponent<GameControllerMechanics>().ScoreUpdateEvent += UpdateScoreHandle;
     }
 
-    private void OnValidate()
-    {
-        _st = GetComponent<Text>();
-    }
-    
     void UpdateScoreHandle(int value)
     {
         _st.text = value.ToString();
