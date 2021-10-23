@@ -36,6 +36,11 @@ public class GameControllerMechanics : MonoBehaviour
 
     public int Score { get; private set; }
 
+    private void Awake()
+    {
+        //Input.backButtonLeavesApp = true;
+    }
+
 
     // Start is called before the first frame update
     private void Start()
@@ -85,7 +90,6 @@ public class GameControllerMechanics : MonoBehaviour
         StateGameChangedEvent?.Invoke(_game);
 
         ClearPlayField();
-        _hud.Close();
         _gameOver.Open();
     }
 
@@ -97,7 +101,10 @@ public class GameControllerMechanics : MonoBehaviour
             _poolObjects.Push(go);
         }
 
+        StopCoroutine(_timerCoroutine);
+        StopCoroutine(_spawnCoroutine);
         _activeObjects.Clear();
+        _hud.Close();
     }
 
     private void ClickBubble(GameObject go)
@@ -153,7 +160,7 @@ public class GameControllerMechanics : MonoBehaviour
     public void Credits()
     {
         Debug.Log("Разработчик: Schikasi\n" +
-                  "Худодник: RinnFox");
+                  "Художник: RinnFox");
     }
 
     public void Exit()
