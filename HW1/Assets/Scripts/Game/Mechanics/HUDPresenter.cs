@@ -22,7 +22,7 @@ namespace Game.Mechanics
 
         private void OnTimeChange(int value)
         {
-            _script.SetTime($"{value / 60}:{value % 60}");
+            _script.SetTime($"{(value / 60):00}:{(value % 60):00}");
         }
 
         public void Open()

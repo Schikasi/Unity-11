@@ -53,7 +53,6 @@ public class BubbleMechanics : MonoBehaviour
     private void OnMouseDown()
     {
         OnClickEvent?.Invoke(gameObject);
-        gameObject.SetActive(false);
     }
 
     public event BurstHandler BurstEvent;

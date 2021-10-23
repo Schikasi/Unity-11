@@ -109,6 +109,8 @@ public class GameControllerMechanics : MonoBehaviour
 
     private void ClickBubble(GameObject go)
     {
+        if(Time.timeScale == 0) return;
+        go.SetActive(false);
         ++Score;
         ScoreUpdateEvent?.Invoke(Score);
 
