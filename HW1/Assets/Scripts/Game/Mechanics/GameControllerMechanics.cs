@@ -1,12 +1,12 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using Game.Mechanics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameControllerMechanics : MonoBehaviour
 {
-    public delegate void ScoreUpdateHandler(int value);
-
-    public delegate void StateGameChangedHandler(bool state);
-
     [SerializeField] private GameObject prefab;
 
     [SerializeField] private Camera _camera;
@@ -15,50 +15,42 @@ public class GameControllerMechanics : MonoBehaviour
 
     [SerializeField] private float rate;
 
+    [SerializeField] private GameObject hudView;
+    [SerializeField] private GameObject mainMenuView;
+    [SerializeField] private GameObject pauseMenuView;
+    [SerializeField] private GameObject gameOverView;
+    private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
+    private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
+    private bool _game = true;
+    private GameOverPresenter _gameOver;
+    private HUDPresenter _hud;
+    private MainMenuPresenter _mainMenu;
+    private PauseMenuPresenter _pauseMenu;
+
+    private Coroutine _spawnCoroutine;
+    private Coroutine _timerCoroutine;
+
     //[SerializeField] private Vector2 maxSize;
 
-    private float _curTime;
-    private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
-    private bool _game = true;
-    private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
-    private int _score;
+    private float _timeStartGame;
+
+    public int Score { get; private set; }
 
 
     // Start is called before the first frame update
     private void Start()
     {
-        StateGameChangedEvent?.Invoke(true);
+        _hud = new HUDPresenter(this, hudView);
+        _mainMenu = new MainMenuPresenter(this, mainMenuView);
+        _pauseMenu = new PauseMenuPresenter(this, pauseMenuView);
+        _gameOver = new GameOverPresenter(this, gameOverView);
+        _mainMenu.Open();
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        if (!_game)
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) RestartGame();
-        }
-        else
-        {
-            _curTime = Mathf.Clamp(_curTime + Time.deltaTime, 0, rate);
-            if (_curTime.Equals(rate))
-            {
-                _curTime = 0.0f;
-                SpawnBubble();
-            }
-        }
-    }
+    public event Action<int> TimeUpdateEvent;
 
-    public event ScoreUpdateHandler ScoreUpdateEvent;
-    public event StateGameChangedHandler StateGameChangedEvent;
-
-    private void RestartGame()
-    {
-        _curTime = 0.0f;
-        _score = 0;
-        ScoreUpdateEvent?.Invoke(_score);
-        _game = true;
-        StateGameChangedEvent?.Invoke(_game);
-    }
+    public event Action<int> ScoreUpdateEvent;
+    public event Action<bool> StateGameChangedEvent;
 
     private void SpawnBubble()
     {
@@ -82,7 +74,7 @@ public class GameControllerMechanics : MonoBehaviour
     {
         var go = Instantiate(prefab);
         var gm = go.GetComponent<BubbleMechanics>();
-        gm.OnClickEvent += AddScore;
+        gm.OnClickEvent += ClickBubble;
         gm.BurstEvent += EndGame;
         return go;
     }
@@ -90,7 +82,15 @@ public class GameControllerMechanics : MonoBehaviour
     private void EndGame()
     {
         _game = false;
+        StateGameChangedEvent?.Invoke(_game);
 
+        ClearPlayField();
+        _hud.Close();
+        _gameOver.Open();
+    }
+
+    private void ClearPlayField()
+    {
         foreach (var go in _activeObjects)
         {
             go.SetActive(false);
@@ -98,15 +98,83 @@ public class GameControllerMechanics : MonoBehaviour
         }
 
         _activeObjects.Clear();
-
-        StateGameChangedEvent?.Invoke(_game);
     }
 
-    private void AddScore(GameObject go)
+    private void ClickBubble(GameObject go)
     {
-        ++_score;
+        ++Score;
+        ScoreUpdateEvent?.Invoke(Score);
+
         _activeObjects.Remove(go);
         _poolObjects.Push(go);
-        ScoreUpdateEvent?.Invoke(_score);
+    }
+
+    private IEnumerator Spawn()
+    {
+        while (_game)
+        {
+            SpawnBubble();
+            yield return new WaitForSeconds(rate);
+        }
+    }
+
+    private IEnumerator GameTimer()
+    {
+        while (_game)
+        {
+            TimeUpdateEvent?.Invoke((int) (Time.time - _timeStartGame));
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+
+        _pauseMenu.Open();
+    }
+
+    public void Play()
+    {
+        Time.timeScale = 1;
+        _timeStartGame = Time.time;
+        Score = 0;
+        _game = true;
+        StateGameChangedEvent?.Invoke(_game);
+        _hud.Open();
+        ScoreUpdateEvent?.Invoke(Score);
+        TimeUpdateEvent?.Invoke(0);
+        _spawnCoroutine = StartCoroutine(Spawn());
+        _timerCoroutine = StartCoroutine(GameTimer());
+
+    }
+
+
+    public void Credits()
+    {
+        Debug.Log("Разработчик: Schikasi\n" +
+                  "Худодник: RinnFox");
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+        _pauseMenu.Close();
+    }
+
+    public void MainMenu()
+    {
+        if (_game)
+        {
+            ClearPlayField();
+            _game = false;
+        }
+
+        _mainMenu.Open();
     }
 }
