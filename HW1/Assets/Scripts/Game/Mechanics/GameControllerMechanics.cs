@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Mechanics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class GameControllerMechanics : MonoBehaviour
 {
     [SerializeField] private GameObject prefab;
 
-    [SerializeField] private Camera _camera;
+    [SerializeField] private Camera mainCamera;
 
     [SerializeField] private float percentOffset;
 
@@ -30,19 +31,10 @@ public class GameControllerMechanics : MonoBehaviour
     private Coroutine _spawnCoroutine;
     private Coroutine _timerCoroutine;
 
-    //[SerializeField] private Vector2 maxSize;
-
     private float _timeStartGame;
 
     public int Score { get; private set; }
-
-    private void Awake()
-    {
-        //Input.backButtonLeavesApp = true;
-    }
-
-
-    // Start is called before the first frame update
+    
     private void Start()
     {
         _hud = new HUDPresenter(this, hudView);
@@ -53,7 +45,6 @@ public class GameControllerMechanics : MonoBehaviour
     }
 
     public event Action<int> TimeUpdateEvent;
-
     public event Action<int> ScoreUpdateEvent;
     public event Action<bool> StateGameChangedEvent;
 
@@ -61,7 +52,7 @@ public class GameControllerMechanics : MonoBehaviour
     {
         var bubble = _poolObjects.Count == 0 ? CreateBubble() : _poolObjects.Pop();
 
-        var position = _camera.ScreenToWorldPoint(
+        var position = mainCamera.ScreenToWorldPoint(
             new Vector2(
                 Random.Range(Screen.width * percentOffset, Screen.width * (1 - percentOffset)),
                 Random.Range(Screen.height * percentOffset, Screen.height * (1 - percentOffset))
@@ -109,7 +100,7 @@ public class GameControllerMechanics : MonoBehaviour
 
     private void ClickBubble(GameObject go)
     {
-        if(Time.timeScale == 0) return;
+        if (Time.timeScale == 0) return;
         go.SetActive(false);
         ++Score;
         ScoreUpdateEvent?.Invoke(Score);
@@ -118,7 +109,7 @@ public class GameControllerMechanics : MonoBehaviour
         _poolObjects.Push(go);
     }
 
-    private IEnumerator Spawn()
+    private IEnumerator SpawnBubbles()
     {
         while (_game)
         {
@@ -138,8 +129,8 @@ public class GameControllerMechanics : MonoBehaviour
 
     public void Pause()
     {
+        if (!_game) return;
         Time.timeScale = 0;
-
         _pauseMenu.Open();
     }
 
@@ -153,9 +144,8 @@ public class GameControllerMechanics : MonoBehaviour
         _hud.Open();
         ScoreUpdateEvent?.Invoke(Score);
         TimeUpdateEvent?.Invoke(0);
-        _spawnCoroutine = StartCoroutine(Spawn());
+        _spawnCoroutine = StartCoroutine(SpawnBubbles());
         _timerCoroutine = StartCoroutine(GameTimer());
-
     }
 
 

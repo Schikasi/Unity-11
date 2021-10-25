@@ -17,7 +17,6 @@ public class BubbleMechanics : MonoBehaviour
     private float _growPercent;
     private SpriteRenderer _sr;
 
-    // Start is called before the first frame update
     private void Start()
     {
         transform.localScale = startScale;
@@ -41,7 +40,7 @@ public class BubbleMechanics : MonoBehaviour
     private void OnEnable()
     {
         _sr ??= GetComponent<SpriteRenderer>();
-        _sr.color = Random.ColorHSV(0f, 1f, 0.7f, 0.85f, 0.7f, 1f, 0.65f, 0.8f);
+        _sr.color = Random.ColorHSV(0f, 1f, 0.75f, 0.80f, 0.75f, 1f, 0.65f, 0.7f);
     }
 
     private void OnDisable()
