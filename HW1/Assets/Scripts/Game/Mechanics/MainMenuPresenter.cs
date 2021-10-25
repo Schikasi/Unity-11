@@ -12,6 +12,7 @@ namespace Game.Mechanics
         {
             _gcm = gcm;
             _view = view;
+            _view.SetActive(false);
             _script = _view.GetComponent<MainMenuView>();
         }
 

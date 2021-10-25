@@ -16,17 +16,20 @@ public class GameControllerMechanics : MonoBehaviour
 
     [SerializeField] private float rate;
 
-    [SerializeField] private GameObject hudView;
+    [Header("UI")][SerializeField] private GameObject hudView;
     [SerializeField] private GameObject mainMenuView;
     [SerializeField] private GameObject pauseMenuView;
     [SerializeField] private GameObject gameOverView;
+    [SerializeField] private GameObject aboutView;
+    
     private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
     private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
-    private bool _game = true;
+    private bool _game = false;
     private GameOverPresenter _gameOver;
     private HUDPresenter _hud;
     private MainMenuPresenter _mainMenu;
     private PauseMenuPresenter _pauseMenu;
+    private AboutPresenter _about;
 
     private Coroutine _spawnCoroutine;
     private Coroutine _timerCoroutine;
@@ -41,6 +44,7 @@ public class GameControllerMechanics : MonoBehaviour
         _mainMenu = new MainMenuPresenter(this, mainMenuView);
         _pauseMenu = new PauseMenuPresenter(this, pauseMenuView);
         _gameOver = new GameOverPresenter(this, gameOverView);
+        _about = new AboutPresenter(this, aboutView);
         _mainMenu.Open();
     }
 
@@ -151,8 +155,8 @@ public class GameControllerMechanics : MonoBehaviour
 
     public void Credits()
     {
-        Debug.Log("Разработчик: Schikasi\n" +
-                  "Художник: RinnFox");
+        _mainMenu.Close();
+        _about.Open();
     }
 
     public void Exit()
