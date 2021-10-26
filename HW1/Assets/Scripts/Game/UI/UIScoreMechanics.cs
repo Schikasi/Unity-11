@@ -4,17 +4,16 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Text))]
 public class UIScoreMechanics : MonoBehaviour
 {
-    private Text _st;
     [SerializeField] private GameObject gameController;
+    private Text _st;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _st = GetComponent<Text>();
         gameController.GetComponent<GameControllerMechanics>().ScoreUpdateEvent += UpdateScoreHandle;
     }
 
-    void UpdateScoreHandle(int value)
+    private void UpdateScoreHandle(int value)
     {
         _st.text = value.ToString();
     }

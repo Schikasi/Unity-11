@@ -3,6 +3,7 @@ using UnityEngine;
 public class UIGameOverMechanics : MonoBehaviour
 {
     [SerializeField] private GameObject gameController;
+    [SerializeField] private GameObject view;
 
     private void Awake()
     {
@@ -11,6 +12,6 @@ public class UIGameOverMechanics : MonoBehaviour
 
     private void ShowScreen(bool state)
     {
-        gameObject.SetActive(!state);
+        view.SetActive(!state);
     }
 }

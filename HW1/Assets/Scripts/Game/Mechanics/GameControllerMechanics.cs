@@ -9,28 +9,23 @@ public class GameControllerMechanics : MonoBehaviour
 
     [SerializeField] private GameObject prefab;
 
-    [SerializeField] private Camera _camera;
+    [SerializeField] private Camera mainCamera;
 
     [SerializeField] private float percentOffset;
 
     [SerializeField] private float rate;
-
-    //[SerializeField] private Vector2 maxSize;
+    private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
+    private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
 
     private float _curTime;
-    private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
     private bool _game = true;
-    private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
     private int _score;
 
-
-    // Start is called before the first frame update
     private void Start()
     {
-        StateGameChangedEvent?.Invoke(true);
+        StateGameChangedEvent?.Invoke(_game);
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (!_game)
@@ -39,8 +34,8 @@ public class GameControllerMechanics : MonoBehaviour
         }
         else
         {
-            _curTime = Mathf.Clamp(_curTime + Time.deltaTime, 0, rate);
-            if (_curTime.Equals(rate))
+            _curTime += Time.deltaTime;
+            if (_curTime >= rate)
             {
                 _curTime = 0.0f;
                 SpawnBubble();
@@ -64,7 +59,7 @@ public class GameControllerMechanics : MonoBehaviour
     {
         var bubble = _poolObjects.Count == 0 ? CreateBubble() : _poolObjects.Pop();
 
-        var position = _camera.ScreenToWorldPoint(
+        var position = mainCamera.ScreenToWorldPoint(
             new Vector2(
                 Random.Range(Screen.width * percentOffset, Screen.width * (1 - percentOffset)),
                 Random.Range(Screen.height * percentOffset, Screen.height * (1 - percentOffset))
@@ -89,6 +84,7 @@ public class GameControllerMechanics : MonoBehaviour
 
     private void EndGame()
     {
+        if (!_game) return;
         _game = false;
 
         foreach (var go in _activeObjects)
@@ -104,6 +100,8 @@ public class GameControllerMechanics : MonoBehaviour
 
     private void AddScore(GameObject go)
     {
+        if (!go.activeSelf) return;
+        go.SetActive(false);
         ++_score;
         _activeObjects.Remove(go);
         _poolObjects.Push(go);

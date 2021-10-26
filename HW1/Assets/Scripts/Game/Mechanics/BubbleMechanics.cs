@@ -6,9 +6,8 @@ public class BubbleMechanics : MonoBehaviour
 
     public delegate void OnClickHandler(GameObject gameObject);
 
-    [Range(0.1f,1f)]
-    [Tooltip("Grow up percent per second")]
-    [SerializeField] private float speedGrowUp = 1;
+    [Range(0.1f, 1f)] [Tooltip("Grow up percent per second")] [SerializeField]
+    private float speedGrowUp = 1;
 
     [SerializeField] private Vector2 startScale = new Vector2(0.1f, 0.1f);
 
@@ -18,19 +17,16 @@ public class BubbleMechanics : MonoBehaviour
     private float _growPercent;
     private SpriteRenderer _sr;
 
-    // Start is called before the first frame update
     private void Start()
     {
         transform.localScale = startScale;
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (transform.localScale.Equals(endScale))
         {
             BurstEvent?.Invoke();
-            gameObject.SetActive(false);
         }
         else
         {
@@ -54,7 +50,6 @@ public class BubbleMechanics : MonoBehaviour
     private void OnMouseDown()
     {
         OnClickEvent?.Invoke(gameObject);
-        gameObject.SetActive(false);
     }
 
     public event BurstHandler BurstEvent;
