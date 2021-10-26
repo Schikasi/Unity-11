@@ -4,9 +4,9 @@ namespace Game.Mechanics
 {
     public class PauseMenuPresenter
     {
+        private readonly GameControllerMechanics _gcm;
         private readonly PauseMenuView _script;
         private readonly GameObject _view;
-        private readonly GameControllerMechanics _gcm;
 
         public PauseMenuPresenter(GameControllerMechanics gcm, GameObject view)
         {

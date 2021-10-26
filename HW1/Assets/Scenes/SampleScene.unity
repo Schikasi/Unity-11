@@ -376,9 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5050130edb63d6c4eb798f184fb02b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScoreLabel: {fileID: 1345053266}
-  TimeLabel: {fileID: 1792555872}
-  PauseButton: {fileID: 1708349996}
+  scoreLabel: {fileID: 1345053266}
+  timeLabel: {fileID: 1792555872}
+  pauseButton: {fileID: 1708349996}
 --- !u!1 &667668555
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,7 +587,6 @@ GameObject:
   - component: {fileID: 799030653}
   - component: {fileID: 799030652}
   - component: {fileID: 799030651}
-  - component: {fileID: 799030650}
   - component: {fileID: 799030654}
   m_Layer: 5
   m_Name: AboutScreen
@@ -618,22 +617,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 163.71}
   m_SizeDelta: {x: 807.42, y: 961.92}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &799030650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 799030648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c92d0085c7d3b94483d612b32e4e150, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GameOverLabel: {fileID: 1135892506}
-  ScoreLabel: {fileID: 667668557}
-  MainMenuButton: {fileID: 0}
-  RetryButton: {fileID: 0}
 --- !u!114 &799030651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,9 +693,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d5e861ffe1624428af96dc741b60cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameNameLabel: {fileID: 1135892506}
-  CreditsLabel: {fileID: 667668557}
-  MainMenuButton: {fileID: 1712466527}
+  gameNameLabel: {fileID: 1135892506}
+  creditsLabel: {fileID: 667668557}
+  mainMenuButton: {fileID: 1712466527}
 --- !u!1 &1019557047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1668,10 +1651,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c92d0085c7d3b94483d612b32e4e150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameOverLabel: {fileID: 386111074}
-  ScoreLabel: {fileID: 1517996114}
-  MainMenuButton: {fileID: 2402360449947495395}
-  RetryButton: {fileID: 5388346021430173138}
+  gameOverLabel: {fileID: 386111074}
+  scoreLabel: {fileID: 1517996114}
+  retryButton: {fileID: 5388346021430173138}
+  mainMenuButton: {fileID: 2402360449947495395}
 --- !u!224 &2094146251 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1648972420125535945, guid: 71561887bdaa0ea46954c5358ae10017, type: 3}

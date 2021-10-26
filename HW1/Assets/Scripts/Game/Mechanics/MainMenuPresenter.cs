@@ -4,9 +4,9 @@ namespace Game.Mechanics
 {
     public class MainMenuPresenter
     {
+        private readonly GameControllerMechanics _gcm;
         private readonly MainMenuView _script;
         private readonly GameObject _view;
-        private readonly GameControllerMechanics _gcm;
 
         public MainMenuPresenter(GameControllerMechanics gcm, GameObject view)
         {

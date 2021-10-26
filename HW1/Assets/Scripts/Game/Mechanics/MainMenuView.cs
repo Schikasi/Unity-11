@@ -1,24 +1,27 @@
 using System;
 using UnityEngine;
 
-public class MainMenuView : MonoBehaviour
+namespace Game.Mechanics
 {
-    public event Action PlayEvent;
-    public event Action CreditsEvent;
-    public event Action ExitEvent;
-
-    public void OnPlay()
+    public class MainMenuView : MonoBehaviour
     {
-        PlayEvent?.Invoke();
-    }
+        public event Action PlayEvent;
+        public event Action CreditsEvent;
+        public event Action ExitEvent;
 
-    public void OnCredit()
-    {
-        CreditsEvent?.Invoke();
-    }
+        public void OnPlay()
+        {
+            PlayEvent?.Invoke();
+        }
 
-    public void OnExit()
-    {
-        ExitEvent?.Invoke();
+        public void OnCredit()
+        {
+            CreditsEvent?.Invoke();
+        }
+
+        public void OnExit()
+        {
+            ExitEvent?.Invoke();
+        }
     }
 }

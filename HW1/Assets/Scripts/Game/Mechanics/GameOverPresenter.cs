@@ -4,9 +4,9 @@ namespace Game.Mechanics
 {
     public class GameOverPresenter
     {
+        private readonly GameControllerMechanics _gcm;
         private readonly GameOverView _script;
         private readonly GameObject _view;
-        private readonly GameControllerMechanics _gcm;
 
         public GameOverPresenter(GameControllerMechanics gcm, GameObject view)
         {

@@ -6,11 +6,10 @@ namespace Game.Mechanics
 {
     public class HUDView : MonoBehaviour
     {
-        [SerializeField] private Text ScoreLabel;
+        [SerializeField] private Text scoreLabel;
+        [SerializeField] private Text timeLabel;
 
-        [SerializeField] private Text TimeLabel;
-
-        [SerializeField] private Button PauseButton;
+        [SerializeField] private Button pauseButton;
 
         public void OnPause()
         {
@@ -21,12 +20,12 @@ namespace Game.Mechanics
 
         public void SetScore(string value)
         {
-            ScoreLabel.text = value;
+            scoreLabel.text = value;
         }
 
         public void SetTime(string value)
         {
-            TimeLabel.text = value;
+            timeLabel.text = value;
         }
     }
 }

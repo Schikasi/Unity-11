@@ -1,18 +1,21 @@
 using System;
 using UnityEngine;
 
-public class PauseMenuView : MonoBehaviour
+namespace Game.Mechanics
 {
-    public event Action ResumeEvent;
-    public event Action MainMenuEvent;
-
-    public void OnResume()
+    public class PauseMenuView : MonoBehaviour
     {
-        ResumeEvent?.Invoke();
-    }
+        public event Action ResumeEvent;
+        public event Action MainMenuEvent;
 
-    public void OnMainMenu()
-    {
-        MainMenuEvent?.Invoke();
+        public void OnResume()
+        {
+            ResumeEvent?.Invoke();
+        }
+
+        public void OnMainMenu()
+        {
+            MainMenuEvent?.Invoke();
+        }
     }
 }

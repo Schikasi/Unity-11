@@ -2,30 +2,32 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOverView : MonoBehaviour
+namespace Game.Mechanics
 {
-    [SerializeField] private Text GameOverLabel;
-
-    [SerializeField] private Text ScoreLabel;
-
-    [SerializeField] private Button MainMenuButton;
-    [SerializeField] private Button RetryButton;
-
-    public event Action MainMenuEvent;
-    public event Action RetryEvent;
-
-    public void OnMainMenu()
+    public class GameOverView : MonoBehaviour
     {
-        MainMenuEvent?.Invoke();
-    }
+        [SerializeField] private Text gameOverLabel;
+        [SerializeField] private Text scoreLabel;
 
-    public void OnRetry()
-    {
-        RetryEvent?.Invoke();
-    }
+        [SerializeField] private Button retryButton;
+        [SerializeField] private Button mainMenuButton;
 
-    public void SetScore(string value)
-    {
-        ScoreLabel.text = value;
+        public event Action MainMenuEvent;
+        public event Action RetryEvent;
+
+        public void OnMainMenu()
+        {
+            MainMenuEvent?.Invoke();
+        }
+
+        public void OnRetry()
+        {
+            RetryEvent?.Invoke();
+        }
+
+        public void SetScore(string value)
+        {
+            scoreLabel.text = value;
+        }
     }
 }

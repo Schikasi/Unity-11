@@ -4,9 +4,9 @@ namespace Game.Mechanics
 {
     public class HUDPresenter
     {
+        private readonly GameControllerMechanics _gcm;
         private readonly HUDView _script;
         private readonly GameObject _view;
-        private readonly GameControllerMechanics _gcm;
 
         public HUDPresenter(GameControllerMechanics gcm, GameObject view)
         {
@@ -23,7 +23,7 @@ namespace Game.Mechanics
 
         private void OnTimeChange(int value)
         {
-            _script.SetTime($"{(value / 60):00}:{(value % 60):00}");
+            _script.SetTime($"{value / 60:00}:{value % 60:00}");
         }
 
         public void Open()
