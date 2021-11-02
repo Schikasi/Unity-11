@@ -1,5 +1,5 @@
 {
-    "name": "UI",
+    "name": "GameUI",
     "rootNamespace": "",
     "references": [
         "GUID:1d39c482a887a5c4b827ff63fdd28c2f"

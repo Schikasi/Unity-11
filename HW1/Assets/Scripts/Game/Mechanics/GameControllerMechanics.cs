@@ -16,7 +16,8 @@ namespace Game.Mechanics
 
         [SerializeField] private float rate;
 
-        [Header("UI")] [SerializeField] private GameObject hudView;
+        [Header("UI")] 
+        [SerializeField] private GameObject hudView;
         [SerializeField] private GameObject mainMenuView;
         [SerializeField] private GameObject pauseMenuView;
         [SerializeField] private GameObject gameOverView;
@@ -24,12 +25,12 @@ namespace Game.Mechanics
 
         private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
         private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
-        private AboutPresenter _about;
+        // private AboutPresenter _about;
         private bool _game;
-        private GameOverPresenter _gameOver;
-        private HUDPresenter _hud;
-        private MainMenuPresenter _mainMenu;
-        private PauseMenuPresenter _pauseMenu;
+        // private GameOverPresenter _gameOver;
+        // private HUDPresenter _hud;
+        // private MainMenuPresenter _mainMenu;
+        // private PauseMenuPresenter _pauseMenu;
 
         private Coroutine _spawnCoroutine;
         private Coroutine _timerCoroutine;
@@ -40,12 +41,12 @@ namespace Game.Mechanics
 
         private void Start()
         {
-            _hud = new HUDPresenter(this, hudView);
-            _mainMenu = new MainMenuPresenter(this, mainMenuView);
-            _pauseMenu = new PauseMenuPresenter(this, pauseMenuView);
-            _gameOver = new GameOverPresenter(this, gameOverView);
-            _about = new AboutPresenter(this, aboutView);
-            _mainMenu.Open();
+            //_hud = new HUDPresenter(this, hudView);
+            // _mainMenu = new MainMenuPresenter(this, mainMenuView);
+            //_pauseMenu = new PauseMenuPresenter(this, null, pauseMenuView);
+            //_gameOver = new GameOverPresenter(this, gameOverView);
+            // _about = new AboutPresenter(this, aboutView);
+            //_mainMenu.Open();
         }
 
         public event Action<int> TimeUpdateEvent;
@@ -85,7 +86,7 @@ namespace Game.Mechanics
             StateGameChangedEvent?.Invoke(_game);
 
             ClearPlayField();
-            _gameOver.Open();
+            // _gameOver.Open();
         }
 
         private void ClearPlayField()
@@ -99,7 +100,7 @@ namespace Game.Mechanics
             StopCoroutine(_timerCoroutine);
             StopCoroutine(_spawnCoroutine);
             _activeObjects.Clear();
-            _hud.Close();
+            // _hud.Close();
         }
 
         private void ClickBubble(GameObject go)
@@ -135,7 +136,7 @@ namespace Game.Mechanics
         {
             if (!_game) return;
             Time.timeScale = 0;
-            _pauseMenu.Open();
+            // _pauseMenu.Open();
         }
 
         public void Play()
@@ -145,9 +146,10 @@ namespace Game.Mechanics
             Score = 0;
             _game = true;
             StateGameChangedEvent?.Invoke(_game);
-            _hud.Open();
+            // _hud.Open();
             ScoreUpdateEvent?.Invoke(Score);
             TimeUpdateEvent?.Invoke(0);
+            
             _spawnCoroutine = StartCoroutine(SpawnBubbles());
             _timerCoroutine = StartCoroutine(GameTimer());
         }
@@ -155,8 +157,8 @@ namespace Game.Mechanics
 
         public void Credits()
         {
-            _mainMenu.Close();
-            _about.Open();
+            // _mainMenu.Close();
+            // _about.Open();
         }
 
         public void Exit()
@@ -167,7 +169,7 @@ namespace Game.Mechanics
         public void ResumeGame()
         {
             Time.timeScale = 1;
-            _pauseMenu.Close();
+            // _pauseMenu.Close();
         }
 
         public void MainMenu()
@@ -178,7 +180,7 @@ namespace Game.Mechanics
                 _game = false;
             }
 
-            _mainMenu.Open();
+            // _mainMenu.Open();
         }
     }
 }

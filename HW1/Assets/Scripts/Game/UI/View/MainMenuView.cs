@@ -6,7 +6,7 @@ namespace Game.Mechanics
     public class MainMenuView : MonoBehaviour
     {
         public event Action PlayEvent;
-        public event Action CreditsEvent;
+        public event Action AboutEvent;
         public event Action ExitEvent;
 
         public void OnPlay()
@@ -14,9 +14,9 @@ namespace Game.Mechanics
             PlayEvent?.Invoke();
         }
 
-        public void OnCredit()
+        public void OnAbout()
         {
-            CreditsEvent?.Invoke();
+            AboutEvent?.Invoke();
         }
 
         public void OnExit()
