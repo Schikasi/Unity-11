@@ -55,10 +55,5 @@ namespace Game.Mechanics
         {
             Application.Quit();
         }
-
-        private void OnEnable()
-        {
-            
-        }
     }
 }

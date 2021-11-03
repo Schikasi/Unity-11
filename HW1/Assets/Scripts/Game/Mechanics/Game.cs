@@ -32,7 +32,14 @@ namespace Game.Mechanics
             _pause = new Pause(gm);
             gm.StartGameEvent += OnStartGame;
             gm.StopGameEvent += OnStopGame;
-            gm.LooseGameEvent += OnStopGame;
+            gm.LooseGameEvent += OnLooseGame;
+        }
+
+        private void OnLooseGame()
+        {
+            _game = false;
+            StopCoroutine(_timerCoroutine);
+            StopCoroutine(_spawnCoroutine);
         }
 
         private void OnStopGame()
@@ -45,6 +52,7 @@ namespace Game.Mechanics
 
         private void OnStartGame()
         {
+            ClearPlayField();
             _timeStartGame = Time.time;
             Score = 0;
             _game = true;
@@ -89,11 +97,10 @@ namespace Game.Mechanics
                     Random.Range(Screen.height * percentOffset, Screen.height * (1 - percentOffset))
                 )
             );
-            position.z = 0.0f;
-
-            bubble.transform.SetPositionAndRotation(position, Quaternion.identity);
             bubble.SetActive(true);
-
+            var bm = bubble.GetComponent<BubbleMechanics>();
+            bm.Spawn(position);
+            gm.LooseGameEvent += bm.Froze;
             _activeObjects.Add(bubble);
         }
 
@@ -102,31 +109,45 @@ namespace Game.Mechanics
             var go = Instantiate(prefab);
             var bm = go.GetComponent<BubbleMechanics>();
             bm.OnClickEvent += ClickBubble;
-            bm.BurstEvent += gm.LooseGame;
+            bm.EndScaleEvent += gm.LooseGame;
             return go;
         }
 
 
         private void ClickBubble(GameObject go)
         {
-            if (Time.timeScale == 0) return;
-            go.SetActive(false);
             ++Score;
             gm.UpdateScore(Score);
 
+            DeactivateBubble(go);
             _activeObjects.Remove(go);
             _poolObjects.Push(go);
         }
-        
-        
+
+
         private void ClearPlayField()
         {
             foreach (var go in _activeObjects)
             {
-                go.SetActive(false);
+                DeactivateBubble(go);
                 _poolObjects.Push(go);
             }
             _activeObjects.Clear();
+        }
+
+        private void DeactivateBubble(GameObject go)
+        {
+            go.SetActive(false);
+            var bm = go.GetComponent<BubbleMechanics>();
+            gm.LooseGameEvent -= bm.Froze;
+            bm.Reset();
+        }
+
+
+        private void AddToPool(GameObject go)
+        {
+            if (go == null) return;
+            _poolObjects.Push(go);
         }
     }
 }
