@@ -99,6 +99,7 @@ MonoBehaviour:
   speedGrowUp: 0.394
   startScale: {x: 0.1, y: 0.1}
   endScale: {x: 5, y: 5}
+  particlePrefab: {fileID: 2367404143280882750, guid: 26c5c0366fddf1247bbc2b27cc00a48c, type: 3}
 --- !u!58 &4448974283655905167
 CircleCollider2D:
   m_ObjectHideFlags: 0

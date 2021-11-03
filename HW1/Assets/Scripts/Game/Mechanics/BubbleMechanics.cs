@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Game.Mechanics
@@ -15,6 +16,7 @@ namespace Game.Mechanics
 
         [SerializeField] private Vector2 endScale = new Vector2(1f, 1f);
 
+        [SerializeField] private GameObject particlePrefab;
 
         private float _growPercent;
         private SpriteRenderer _sr;
@@ -51,7 +53,20 @@ namespace Game.Mechanics
 
         private void OnMouseDown()
         {
+            SpawnParticles();
             OnClickEvent?.Invoke(gameObject);
+        }
+
+        private void SpawnParticles()
+        {
+            var go = Instantiate(particlePrefab, transform.localPosition, Quaternion.identity);
+            var particles = go.GetComponent<ParticleSystem>();
+            var main = particles.main;
+            var shape = particles.shape;
+            shape.radius = transform.localScale.x / 8;
+            main.startColor = _sr.color;
+            particles.Play();
+            Destroy(particles.gameObject, main.duration);
         }
 
         public event BurstHandler BurstEvent;

@@ -1,3 +1,17 @@
-﻿fileFormatVersion: 2
+fileFormatVersion: 2
 guid: 507c4e278ae24963abac1017ce1c6b79
-timeCreated: 1635885090
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gm: {fileID: 11400000, guid: 2adccf162b0254b46b2235c55bccc8c9, type: 2}
+  - hudView: {instanceID: 0}
+  - mainMenuView: {instanceID: 0}
+  - pauseMenuView: {instanceID: 0}
+  - gameOverView: {instanceID: 0}
+  - aboutView: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
