@@ -9,6 +9,7 @@ namespace Game.Mechanics
             gm.PauseGameEvent += OnPause;
             gm.ResumeGameEvent += OnResume;
             gm.StartGameEvent += OnResume;
+            gm.LooseGameEvent += OnResume;
         }
 
         private void OnResume()
