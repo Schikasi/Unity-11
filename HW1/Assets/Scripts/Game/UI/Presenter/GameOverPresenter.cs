@@ -18,7 +18,8 @@ namespace Game.Mechanics
         {
             _script.RetryEvent += _gm.StartGame;
             _script.MainMenuEvent += _gm.StopGame;
-            _script.SetScore($"Score: {_gm.Score}");
+            _script.SetScore($"{_gm.Score}");
+            _script.SetTime($"{_gm.Time/60:00}:{_gm.Time%60:00}");
         }
 
         public void Close()

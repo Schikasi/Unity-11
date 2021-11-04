@@ -30,7 +30,7 @@ namespace Game.Mechanics
 
         private void OnScoreChange(int value)
         {
-            _script.SetScore($"Score: {value}");
+            _script.SetScore($"{value}");
         }
 
         private void OnTimeChange(int value)

@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,11 +7,8 @@ namespace Game.Mechanics
 {
     public class GameOverView : MonoBehaviour
     {
-        [SerializeField] private Text gameOverLabel;
-        [SerializeField] private Text scoreLabel;
-
-        [SerializeField] private Button retryButton;
-        [SerializeField] private Button mainMenuButton;
+        [SerializeField] private TextMeshProUGUI score;
+        [SerializeField] private TextMeshProUGUI time;
 
         public event Action MainMenuEvent;
         public event Action RetryEvent;
@@ -27,7 +25,12 @@ namespace Game.Mechanics
 
         public void SetScore(string value)
         {
-            scoreLabel.text = value;
+            score.text = value;
+        }
+        
+        public void SetTime(string val)
+        {
+            time.text = val;
         }
     }
 }

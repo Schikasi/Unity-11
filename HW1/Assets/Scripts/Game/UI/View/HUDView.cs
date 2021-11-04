@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +7,8 @@ namespace Game.Mechanics
 {
     public class HUDView : MonoBehaviour
     {
-        [SerializeField] private Text scoreLabel;
-        [SerializeField] private Text timeLabel;
+        [SerializeField] private TextMeshProUGUI scoreLabel;
+        [SerializeField] private TextMeshProUGUI timeLabel;
 
         [SerializeField] private Button pauseButton;
 

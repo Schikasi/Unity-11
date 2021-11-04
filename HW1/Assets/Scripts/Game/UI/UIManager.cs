@@ -38,6 +38,7 @@ namespace Game.Mechanics
             gm.PauseGameEvent += ShowPauseMenu;
             gm.ResumeGameEvent += HidePauseMenu;
             gm.StopGameEvent += HidePauseMenu;
+            gm.LooseGameEvent += HidePauseMenu;
             
             gm.StopGameEvent += ShowMainMenu;
             gm.LooseGameEvent += ShowGameOver;

@@ -7,6 +7,7 @@ namespace Game.Mechanics
     public class GameManager : ScriptableObject
     {
         public int Score { get; private set; }
+        public int Time { get; private set; }
         public event Action StartGameEvent;
         public event Action PauseGameEvent;
         public event Action ResumeGameEvent;
@@ -48,6 +49,7 @@ namespace Game.Mechanics
 
         public void UpdateTime(int val)
         {
+            Time = val;
             UpdateTimeEvent?.Invoke(val);
         }
 

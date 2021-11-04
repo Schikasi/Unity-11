@@ -41,7 +41,7 @@ namespace Game.Mechanics
 
         private void OnExit()
         {
-            _um.HideMainMenu();
+            //_um.HideMainMenu();
             _um.OnExit();
         }
     }
