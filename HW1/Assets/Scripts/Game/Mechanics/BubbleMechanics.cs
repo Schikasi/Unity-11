@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Game.Mechanics
@@ -14,7 +12,7 @@ namespace Game.Mechanics
 
         [SerializeField] private Vector2 startScale = new Vector2(0.1f, 0.1f);
         [SerializeField] private Vector2 endScale = new Vector2(1f, 1f);
-        [SerializeField] private GameObject particlePrefab;
+        [SerializeField] private GameObject boopEffectsPrefab;
         [SerializeField] private GameObject viewBubble;
 
         private float _growPercent;
@@ -50,7 +48,7 @@ namespace Game.Mechanics
         private void OnMouseDown()
         {
             if (!_isActive || Time.timeScale == 0) return;
-            SpawnParticles();
+            SpawnBoopEffect();
             OnClickEvent?.Invoke(gameObject);
         }
 
@@ -61,16 +59,19 @@ namespace Game.Mechanics
             StartCoroutine(GrowUp());
         }
 
-        private void SpawnParticles()
+        private void SpawnBoopEffect()
         {
-            var go = Instantiate(particlePrefab, transform.localPosition, Quaternion.identity);
-            var particles = go.GetComponent<ParticleSystem>();
-            var main = particles.main;
-            var shape = particles.shape;
+            var go = Instantiate(boopEffectsPrefab, transform.localPosition, Quaternion.identity);
+            var ps = go.GetComponent<ParticleSystem>();
+            var aud = go.GetComponent<AudioSource>();
+            var main = ps.main;
+            var shape = ps.shape;
             shape.radius = transform.localScale.x / 8;
             main.startColor = _sr.color;
-            particles.Play();
-            Destroy(particles.gameObject, main.duration);
+            aud.pitch = Mathf.Lerp(1.9f, 0.6f, _growPercent);
+            ps.Play();
+            aud.Play();
+            Destroy(ps.gameObject, main.duration);
         }
 
         public void Froze()
