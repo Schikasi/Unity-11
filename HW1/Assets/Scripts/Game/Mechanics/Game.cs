@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 namespace Game.Mechanics
 {
@@ -16,16 +13,16 @@ namespace Game.Mechanics
         [SerializeField] private float percentOffset;
 
         [SerializeField] private float rate;
+        private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
+        private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
+        private bool _game;
+
+        private Pause _pause;
+        private Coroutine _spawnCoroutine;
+        private Coroutine _timerCoroutine;
         private float _timeStartGame;
 
         public int Score { get; private set; }
-        private bool _game;
-        private Coroutine _spawnCoroutine;
-        private Coroutine _timerCoroutine;
-        private readonly HashSet<GameObject> _activeObjects = new HashSet<GameObject>();
-        private readonly Stack<GameObject> _poolObjects = new Stack<GameObject>();
-
-        private Pause _pause;
 
         private void Awake()
         {
@@ -65,7 +62,7 @@ namespace Game.Mechanics
 
         private IEnumerator SpawnBubbles()
         {
-            float t = 0f;
+            var t = 0f;
             while (_game)
             {
                 t += Time.deltaTime;
@@ -74,6 +71,7 @@ namespace Game.Mechanics
                     SpawnBubble();
                     t = 0f;
                 }
+
                 yield return null;
             }
         }
@@ -132,6 +130,7 @@ namespace Game.Mechanics
                 DeactivateBubble(go);
                 _poolObjects.Push(go);
             }
+
             _activeObjects.Clear();
         }
 

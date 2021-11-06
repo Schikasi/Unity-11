@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Game.Mechanics;
+using Game.UI.View;
+using UnityEngine;
 
-namespace Game.Mechanics
+namespace Game.UI.Presenter
 {
     public class HUDPresenter
     {

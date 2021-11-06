@@ -16,15 +16,31 @@ namespace Game.Mechanics
         [SerializeField] private GameObject viewBubble;
 
         private float _growPercent;
+        private bool _isActive;
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
-        private bool _isActive = false;
+
+        public void Reset()
+        {
+            _sr.color = Random.ColorHSV(0f, 1f, 0.75f, 0.80f, 0.75f, 1f, 0.65f, 0.7f);
+            transform.localScale = startScale;
+            _growPercent = 0.0f;
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.velocity = Vector2.zero;
+        }
 
         private void OnEnable()
         {
             _sr = viewBubble.GetComponent<SpriteRenderer>();
             _rb = GetComponent<Rigidbody2D>();
             Reset();
+        }
+
+        private void OnMouseDown()
+        {
+            if (!_isActive || Time.timeScale == 0) return;
+            SpawnBoopEffect();
+            OnClickEvent?.Invoke(gameObject);
         }
 
         private IEnumerator GrowUp()
@@ -36,20 +52,12 @@ namespace Game.Mechanics
                     EndScaleEvent?.Invoke();
                     yield break;
                 }
-                else
-                {
-                    _growPercent += Time.deltaTime * speedGrowUp;
-                    transform.localScale = Vector2.Lerp(startScale, endScale, _growPercent);
-                }
+
+                _growPercent += Time.deltaTime * speedGrowUp;
+                transform.localScale = Vector2.Lerp(startScale, endScale, _growPercent);
+
                 yield return null;
             }
-        }
-
-        private void OnMouseDown()
-        {
-            if (!_isActive || Time.timeScale == 0) return;
-            SpawnBoopEffect();
-            OnClickEvent?.Invoke(gameObject);
         }
 
         public void Spawn(Vector2 position)
@@ -78,15 +86,6 @@ namespace Game.Mechanics
         {
             _isActive = false;
             _rb.bodyType = RigidbodyType2D.Dynamic;
-        }
-
-        public void Reset()
-        {
-            _sr.color = Random.ColorHSV(0f, 1f, 0.75f, 0.80f, 0.75f, 1f, 0.65f, 0.7f);
-            transform.localScale = startScale;
-            _growPercent = 0.0f;
-            _rb.bodyType = RigidbodyType2D.Kinematic;
-            _rb.velocity = Vector2.zero;
         }
 
         public event Action EndScaleEvent;

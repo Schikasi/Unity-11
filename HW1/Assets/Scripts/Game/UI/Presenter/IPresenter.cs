@@ -1,4 +1,4 @@
-﻿namespace Game.Mechanics
+﻿namespace Game.UI.Presenter
 {
     public interface IPresenter
     {

@@ -1,7 +1,8 @@
-﻿using Game.UI.View;
+﻿using Game.Mechanics;
+using Game.UI.View;
 using UnityEngine;
 
-namespace Game.Mechanics
+namespace Game.UI.Presenter
 {
     public class PauseMenuPresenter
     {
@@ -18,9 +19,9 @@ namespace Game.Mechanics
         {
             _script.ResumeEvent += _gm.ResumeGame;
             _script.MainMenuEvent += _gm.StopGame;
-            
+
             _script.SetScore(_gm.Score.ToString());
-            _script.SetTime($"{_gm.Time/60:00}:{_gm.Time%60:00}");
+            _script.SetTime($"{_gm.Time / 60:00}:{_gm.Time % 60:00}");
         }
 
         public void Close()

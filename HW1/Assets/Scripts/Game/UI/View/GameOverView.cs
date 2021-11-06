@@ -1,9 +1,8 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Game.Mechanics
+namespace Game.UI.View
 {
     public class GameOverView : MonoBehaviour
     {
@@ -27,7 +26,7 @@ namespace Game.Mechanics
         {
             score.text = value;
         }
-        
+
         public void SetTime(string val)
         {
             time.text = val;

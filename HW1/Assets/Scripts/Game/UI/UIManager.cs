@@ -1,20 +1,20 @@
-﻿using System;
+﻿using Game.Mechanics;
+using Game.UI.Presenter;
 using UnityEngine;
 
-namespace Game.Mechanics
+namespace Game.UI
 {
-    
     public class UIManager : MonoBehaviour
     {
         [SerializeField] private GameManager gm;
-        
-        [Header("UI")] 
-        [SerializeField] private GameObject hudView;
+
+        [Header("UI")] [SerializeField] private GameObject hudView;
+
         [SerializeField] private GameObject mainMenuView;
         [SerializeField] private GameObject pauseMenuView;
         [SerializeField] private GameObject gameOverView;
         [SerializeField] private GameObject aboutView;
-        
+
         private AboutPresenter _about;
         private GameOverPresenter _gameOver;
         private HUDPresenter _hud;
@@ -34,17 +34,17 @@ namespace Game.Mechanics
             gm.ResumeGameEvent += ShowHUD;
             gm.PauseGameEvent += HideHUD;
             gm.LooseGameEvent += HideHUD;
-            
+
             gm.PauseGameEvent += ShowPauseMenu;
             gm.ResumeGameEvent += HidePauseMenu;
             gm.StopGameEvent += HidePauseMenu;
             gm.LooseGameEvent += HidePauseMenu;
-            
+
             gm.StopGameEvent += ShowMainMenu;
             gm.LooseGameEvent += ShowGameOver;
             gm.StartGameEvent += HideGameOver;
             gm.StopGameEvent += HideGameOver;
-            
+
 
             ShowMainMenu();
         }

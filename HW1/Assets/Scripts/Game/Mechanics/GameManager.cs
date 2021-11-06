@@ -20,7 +20,7 @@ namespace Game.Mechanics
         {
             StartGameEvent?.Invoke();
         }
-        
+
         public void PauseGame()
         {
             PauseGameEvent?.Invoke();

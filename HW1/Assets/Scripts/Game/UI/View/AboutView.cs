@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Mechanics
+namespace Game.UI.View
 {
     public class AboutView : MonoBehaviour
     {

@@ -6,11 +6,10 @@ namespace Game.UI.View
 {
     public class PauseMenuView : MonoBehaviour
     {
-        public event Action ResumeEvent;
-        public event Action MainMenuEvent;
-
         [SerializeField] private TextMeshProUGUI score;
         [SerializeField] private TextMeshProUGUI time;
+        public event Action ResumeEvent;
+        public event Action MainMenuEvent;
 
         public void OnResume()
         {
