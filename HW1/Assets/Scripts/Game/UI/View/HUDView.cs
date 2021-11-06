@@ -10,7 +10,7 @@ namespace Game.UI.View
         [SerializeField] private TextMeshProUGUI scoreLabel;
         [SerializeField] private TextMeshProUGUI timeLabel;
 
-        [SerializeField] private Button pauseButton;
+        [SerializeField] private Animation animUpdateScore;
 
         public void OnPause()
         {
@@ -19,9 +19,24 @@ namespace Game.UI.View
 
         public event Action PauseEvent;
 
+        /// <summary>
+        /// Set value without anim.
+        /// </summary>
+        /// <param name="value">Score value</param>
         public void SetScore(string value)
         {
             scoreLabel.text = value;
+        }
+
+        /// <summary>
+        /// Set value with anim.
+        /// </summary>
+        /// <param name="value">Score value</param>
+        public void UpdateScore(string value)
+        {
+            scoreLabel.text = value;
+            if (animUpdateScore.isPlaying) animUpdateScore.Rewind();
+            animUpdateScore.Play();
         }
 
         public void SetTime(string value)

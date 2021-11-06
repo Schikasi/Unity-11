@@ -1,6 +1,7 @@
 ﻿using Game.Mechanics;
 using Game.UI.View;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace Game.UI.Presenter
 {
@@ -17,6 +18,9 @@ namespace Game.UI.Presenter
 
         public void Open()
         {
+            _script.SetScore($"{_gm.Score}");
+            _script.SetTime($"{_gm.Time / 60:00}:{_gm.Time % 60:00}");
+            
             _gm.UpdateScoreEvent += OnScoreChange;
             _gm.UpdateTimeEvent += OnTimeChange;
             _script.PauseEvent += _gm.PauseGame;
@@ -32,7 +36,7 @@ namespace Game.UI.Presenter
 
         private void OnScoreChange(int value)
         {
-            _script.SetScore($"{value}");
+            _script.UpdateScore($"{value}");
         }
 
         private void OnTimeChange(int value)

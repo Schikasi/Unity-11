@@ -22,8 +22,6 @@ namespace Game.Mechanics
         private Coroutine _timerCoroutine;
         private float _timeStartGame;
 
-        public int Score { get; private set; }
-
         private void Awake()
         {
             _pause = new Pause(gm);
@@ -51,11 +49,7 @@ namespace Game.Mechanics
         {
             ClearPlayField();
             _timeStartGame = Time.time;
-            Score = 0;
             _game = true;
-            gm.UpdateScore(0);
-            gm.UpdateTime(0);
-
             _spawnCoroutine = StartCoroutine(SpawnBubbles());
             _timerCoroutine = StartCoroutine(GameTimer());
         }
@@ -114,8 +108,7 @@ namespace Game.Mechanics
 
         private void ClickBubble(GameObject go)
         {
-            ++Score;
-            gm.UpdateScore(Score);
+            gm.UpdateScore(gm.Score+1);
 
             DeactivateBubble(go);
             _activeObjects.Remove(go);

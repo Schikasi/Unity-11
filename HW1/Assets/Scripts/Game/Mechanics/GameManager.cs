@@ -18,6 +18,8 @@ namespace Game.Mechanics
 
         public void StartGame()
         {
+            Score = 0;
+            Time = 0;
             StartGameEvent?.Invoke();
         }
 
