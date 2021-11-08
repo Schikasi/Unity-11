@@ -24,7 +24,7 @@ namespace Game.UI.Presenter
             _script.ChangeVolumeEffectsEvent -= SetVolumeEffects;
             float value;
             _audioMixer.GetFloat("EffectsVolume", out value);
-            _script.SetCheckMark(value > -1.0f);
+            _script.SetVolumeEffect(value > -1.0f);
         }
 
 

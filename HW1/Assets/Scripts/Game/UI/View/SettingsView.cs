@@ -1,24 +1,34 @@
 using System;
+using Game.UI.Widget;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.UI.View
 {
     public class SettingsView : MonoBehaviour
     {
-        [SerializeField] private GameObject checkMark;
+        [SerializeField] private CheckBox volumeEffect;
         public event Action MainMenuEvent;
         public event Action<bool> ChangeVolumeEffectsEvent;
-        // Start is called before the first frame update
 
-        public void ToggleCheckMark()
+        private void OnEnable()
         {
-            checkMark.SetActive(!checkMark.activeSelf);
-            ChangeVolumeEffectsEvent?.Invoke(checkMark.activeSelf);
+            volumeEffect.CheckBoxToggleEvent += ChangeVolumeEffect;
         }
 
-        public void SetCheckMark(bool value)
+        private void OnDisable()
         {
-            checkMark.SetActive(value);
+            volumeEffect.CheckBoxToggleEvent -= ChangeVolumeEffect;
+        }
+
+        private void ChangeVolumeEffect(bool value)
+        {
+            ChangeVolumeEffectsEvent?.Invoke(value);
+        }
+
+        public void SetVolumeEffect(bool value)
+        {
+            volumeEffect.SetCheckMark(value);
         }
     
         public void OnMainMenu()
