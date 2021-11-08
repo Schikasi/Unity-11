@@ -18,6 +18,7 @@ namespace Game.UI.Presenter
         public void Close()
         {
             _script.PlayEvent -= OnPlay;
+            _script.SettingsEvent -= OnSettings;
             _script.AboutEvent -= OnAbout;
             _script.ExitEvent -= OnExit;
         }
@@ -25,6 +26,7 @@ namespace Game.UI.Presenter
         public void Open()
         {
             _script.PlayEvent += OnPlay;
+            _script.SettingsEvent += OnSettings;
             _script.AboutEvent += OnAbout;
             _script.ExitEvent += OnExit;
         }
@@ -33,6 +35,12 @@ namespace Game.UI.Presenter
         {
             _um.HideMainMenu();
             _um.OnPlay();
+        }
+
+        private void OnSettings()
+        {
+            _um.HideMainMenu();
+            _um.ShowSettings();
         }
 
         private void OnAbout()

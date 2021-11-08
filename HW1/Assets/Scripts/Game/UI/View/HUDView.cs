@@ -36,7 +36,7 @@ namespace Game.UI.View
         {
             scoreLabel.text = value;
             if (animUpdateScore.isPlaying) animUpdateScore.Rewind();
-            animUpdateScore.Play();
+            animUpdateScore.Play(); 
         }
 
         public void SetTime(string value)

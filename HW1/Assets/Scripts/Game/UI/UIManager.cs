@@ -1,12 +1,15 @@
-﻿using Game.Mechanics;
+﻿using System;
+using Game.Mechanics;
 using Game.UI.Presenter;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Game.UI
 {
     public class UIManager : MonoBehaviour
     {
         [SerializeField] private GameManager gm;
+        [SerializeField] private AudioMixer am;
 
         [Header("UI")] [SerializeField] private GameObject hudView;
 
@@ -14,12 +17,15 @@ namespace Game.UI
         [SerializeField] private GameObject pauseMenuView;
         [SerializeField] private GameObject gameOverView;
         [SerializeField] private GameObject aboutView;
+        [SerializeField] private GameObject settingsView;
+
 
         private AboutPresenter _about;
         private GameOverPresenter _gameOver;
         private HUDPresenter _hud;
         private MainMenuPresenter _mainMenu;
         private PauseMenuPresenter _pauseMenu;
+        private SettingsPresenter _settings;
 
         private void OnEnable()
         {
@@ -28,8 +34,8 @@ namespace Game.UI
             _hud = new HUDPresenter(gm, hudView);
             _pauseMenu = new PauseMenuPresenter(gm, pauseMenuView);
             _gameOver = new GameOverPresenter(gm, gameOverView);
-
-
+            _settings = new SettingsPresenter(this, am, settingsView);
+            
             gm.StartGameEvent += ShowHUD;
             gm.ResumeGameEvent += ShowHUD;
             gm.PauseGameEvent += HideHUD;
@@ -117,6 +123,18 @@ namespace Game.UI
         {
             _pauseMenu.Open();
             pauseMenuView.SetActive(true);
+        }
+
+        public void HideSettings()
+        {
+            settingsView.SetActive(false);
+            _settings.Close();
+        }
+        
+        public void ShowSettings()
+        {
+            _settings.Open();
+            settingsView.SetActive(true);
         }
     }
 }

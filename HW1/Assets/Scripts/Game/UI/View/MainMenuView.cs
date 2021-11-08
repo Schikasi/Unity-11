@@ -6,6 +6,7 @@ namespace Game.UI.View
     public class MainMenuView : MonoBehaviour
     {
         public event Action PlayEvent;
+        public event Action SettingsEvent;
         public event Action AboutEvent;
         public event Action ExitEvent;
 
@@ -14,6 +15,11 @@ namespace Game.UI.View
             PlayEvent?.Invoke();
         }
 
+        public void OnSettings()
+        {
+            SettingsEvent?.Invoke();
+        }
+        
         public void OnAbout()
         {
             AboutEvent?.Invoke();
