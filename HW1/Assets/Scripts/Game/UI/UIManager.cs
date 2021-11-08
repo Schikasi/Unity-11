@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Game.Mechanics;
 using Game.UI.Presenter;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Game.UI
         [SerializeField] private GameObject gameOverView;
         [SerializeField] private GameObject aboutView;
         [SerializeField] private GameObject settingsView;
+        [SerializeField] private GameObject Preview;
 
 
         private AboutPresenter _about;
@@ -51,8 +53,18 @@ namespace Game.UI
             gm.StartGameEvent += HideGameOver;
             gm.StopGameEvent += HideGameOver;
 
+            StartCoroutine(ShowPreview());
+            //ShowMainMenu();
+        }
 
+        private IEnumerator ShowPreview()
+        {
+            var anim = Preview.GetComponent<Animation>();
+            yield return new WaitWhile(()=> anim.isPlaying);
             ShowMainMenu();
+            anim.Play("Preview2");
+            yield return new WaitWhile(()=> anim.isPlaying);
+            Destroy(Preview);
         }
 
         private void HideGameOver()
