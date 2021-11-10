@@ -49,9 +49,8 @@ MonoBehaviour:
   speedGrowUp: 0.394
   startScale: {x: 0.1, y: 0.1}
   endScale: {x: 5, y: 5}
-  particlePrefab: {fileID: 2367404143280882750, guid: 26c5c0366fddf1247bbc2b27cc00a48c, type: 3}
+  boopEffectsPrefab: {fileID: 2367404143280882750, guid: 26c5c0366fddf1247bbc2b27cc00a48c, type: 3}
   viewBubble: {fileID: 6455568508143743103}
-  physicBubble: {fileID: 4448974283655905203}
 --- !u!50 &9045082316362379940
 Rigidbody2D:
   serializedVersion: 4
