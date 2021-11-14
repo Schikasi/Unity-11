@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game
 {
@@ -59,10 +60,15 @@ namespace Game
             if (PlayerInput == null)
                 return;
 
+            
+        }
+
+        private void FixedUpdate()
+        {
             var (moveDirection, viewDirection, shoot) = PlayerInput.CurrentInput();
-            ProcessShoot(shoot);
             Rigidbody.velocity = moveDirection.normalized * Speed;
             transform.rotation = viewDirection;
+            ProcessShoot(shoot);
         }
 
         private void ProcessShoot(bool isShoot)
