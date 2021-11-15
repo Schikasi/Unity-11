@@ -107,6 +107,8 @@ GameObject:
   - component: {fileID: 4754911354900822}
   - component: {fileID: 54461488628131348}
   - component: {fileID: 7681659814906748126}
+  - component: {fileID: 5790679462593005247}
+  - component: {fileID: 928014225707410922}
   m_Layer: 16
   m_Name: Zombie
   m_TagString: Untagged
@@ -158,11 +160,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce954f8ee64e45cb832586d939942063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerInput: {fileID: 5790679462593005247}
   _aliveView: {fileID: 1131526549626236}
   _diedView: {fileID: 7750346275728890811}
   _speed: 5
+  _runSpeed: 7.5
   _rigidbody: {fileID: 54461488628131348}
   _deltaPath: []
+--- !u!114 &5790679462593005247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186256172198026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dde0c8b28ed4db6823f6dafec7d8665, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelMap: {fileID: 0}
+--- !u!208 &928014225707410922
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186256172198026}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0
 --- !u!1 &7750346275728890811
 GameObject:
   m_ObjectHideFlags: 0

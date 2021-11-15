@@ -4,6 +4,8 @@ namespace Game
 {
     public class ZombieComponent : MonoBehaviour
     {
+        public PlayerInput PlayerInput;
+        
         [SerializeField] private GameObject _aliveView;
 
         [SerializeField] private GameObject _diedView;
@@ -27,7 +29,32 @@ namespace Game
             SetState(true);
         }
 
-        private void Update()
+        private void FixedUpdate()
+        {
+            if (!IsAlive)
+            {
+                Stop();
+                return;
+            }
+            //Patrool();
+            BotWalk();
+        }
+
+        private void Stop()
+        { 
+            _rigidbody.velocity = Vector3.zero;
+        }
+
+        private void BotWalk()
+        {
+            
+            if (PlayerInput == null)
+                return;
+            var (moveDirection, viewDirection, shoot) = PlayerInput.CurrentInput();
+            _rigidbody.velocity = moveDirection.normalized * _speed;
+        }
+
+        private void Patrool()
         {
             if (_deltaPath == null || _deltaPath.Length < 2)
                 return;
