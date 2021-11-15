@@ -13,13 +13,14 @@ namespace Input
         [FormerlySerializedAs("_levelMap")] [SerializeField]
         private LevelMap levelMap;
 
+        [SerializeField] private GameObject shooter;
         [SerializeField] private BulletController bullet;
         [SerializeField] private float visionDistance = 25f;
 
         private List<Vector2Int> _path;
         private int _currentIndexPath;
-        private Vector2Int _targetPosition;
-        private GameObject _targetZombie;
+        private Vector2Int _targetMapPosition;
+        private GameObject _targetZombie = null;
 
         private int[,] _map;
         private int _deltaX;
@@ -27,42 +28,67 @@ namespace Input
 
         public override (Vector3 moveDirection, Quaternion viewDirection, bool shoot) CurrentInput()
         {
-            var zc = _targetZombie?.GetComponent<ZombieComponent>();
-            if (zc == null || !zc.IsAlive)
-            {
+            // Выбор новой цели
+            if (_targetZombie == null)
                 _targetZombie = FindNewTarget();
-                if (_targetZombie == null)
-                {
-                    return (Vector3.zero, Quaternion.identity, false);
-                }
-            }
+            else if (!_targetZombie.GetComponentInParent<ZombieComponent>().IsAlive)
+                _targetZombie = FindNewTarget();
+            //Если новая цель отсуствует - стоим
+            if (_targetZombie == null)
+                return (Vector3.zero, Quaternion.identity, false);
 
-            if (Vector2Int.Distance(_targetPosition, ToInt(_targetZombie.transform.position)) > 1f)
+            var playerWorldPosition = transform.position;
+            var zombieWorldPosition = _targetZombie.transform.position;
+            var playerMapPosition = ToInt(playerWorldPosition);
+            var zombieMapPosition = ToInt(zombieWorldPosition);
+
+            //Если зомби ушёл от места до которого рассчитан путь более чем на 1 клетку - перерасчитываем путь
+            if (Vector2Int.Distance(_targetMapPosition, zombieMapPosition) > 1f)
             {
-                _targetPosition = ToInt(_targetZombie.transform.position);
-                _path = AStarFromGoogle.FindPath(_map, ToInt(transform.position), _targetPosition);
+                _targetMapPosition = zombieMapPosition;
+                _path = AStarFromGoogle.FindPath(_map, playerMapPosition, _targetMapPosition);
                 _currentIndexPath = 0;
             }
 
+            //Вычисляем вектор стрельбы в зомби (без упреждения)
+            var shootDirection = ShootDirection(_targetZombie);
+            if (shootDirection.Equals(Vector3.zero))
+            {
+                var shooterTarget = FindShootTarget();
+                if (shooterTarget != null)
+                    shootDirection = ShootDirection(shooterTarget);
+            }
 
-            var playerPosition = transform.position;
-            var zombiePosition = _targetZombie.transform.position;
-            var directVector = CanShoot(_targetZombie);
-            var shoot = directVector != Vector3.zero;
+            var shoot = shootDirection != Vector3.zero;
 
-            if (ToInt(transform.position) == _targetPosition)
-                return (Vector3.zero, Quaternion.LookRotation(directVector), shoot);
+            if (playerMapPosition == _targetMapPosition)
+                return (Vector3.zero, Quaternion.LookRotation(shootDirection), shoot);
 
-            if (ToInt(transform.position) == _path[_currentIndexPath])
+            if (playerMapPosition == _path[_currentIndexPath])
                 ++_currentIndexPath;
-            var moveDirection = new Vector3(_path[_currentIndexPath].x - _deltaX, playerPosition.y,
-                _path[_currentIndexPath].y - _deltaZ) - playerPosition;
+            var moveDirection = new Vector3(_path[_currentIndexPath].x - _deltaX, playerWorldPosition.y,
+                _path[_currentIndexPath].y - _deltaZ) - playerWorldPosition;
 
-            directVector = shoot ? directVector : moveDirection;
-            moveDirection = !shoot || !(Vector3.Distance(playerPosition, zombiePosition) <= 3f)
+            var viewDirection = shoot ? shootDirection : moveDirection;
+            viewDirection.y = 0;
+            moveDirection = !shoot || !(Vector3.Distance(playerWorldPosition, zombieWorldPosition) <= 3f)
                 ? moveDirection
                 : Vector3.zero;
-            return (moveDirection, Quaternion.LookRotation(directVector), shoot);
+            return (moveDirection, Quaternion.LookRotation(viewDirection), shoot);
+        }
+
+        private GameObject FindShootTarget()
+        {
+            var targets = Physics.OverlapSphere(transform.position, visionDistance, 1 << 16);
+            foreach (var target in targets)
+            {
+                var go = target.gameObject;
+                var zombieComponent = target.transform.GetComponentInParent<ZombieComponent>();
+                if (zombieComponent == null || !zombieComponent.IsAlive) continue;
+                if (ShootDirection(go) != Vector3.zero) return go;
+            }
+
+            return null;
         }
 
         private GameObject FindNewTarget()
@@ -75,7 +101,7 @@ namespace Input
                 var go = target.gameObject;
                 var zombieComponent = target.transform.GetComponentInParent<ZombieComponent>();
                 if (zombieComponent == null || !zombieComponent.IsAlive) continue;
-                if (CanShoot(go) != Vector3.zero) return go;
+                if (ShootDirection(go) != Vector3.zero) return go;
 
                 var distance = Vector3.Distance(transform.position, target.transform.position);
                 if (distance > minDistance) continue;
@@ -87,18 +113,22 @@ namespace Input
             return newTarget;
         }
 
-        private Vector3 CanShoot(GameObject target)
+        private Vector3 ShootDirection(GameObject target)
         {
             var targetPosition = target.transform.position;
-            var playerPosition = transform.position;
-            var direction = targetPosition - playerPosition;
-            var ray = new Ray(playerPosition, targetPosition - playerPosition);
+            var shooterPosition = transform.position + Vector3.up;
+            Debug.DrawRay(shooterPosition, (targetPosition - shooterPosition), Color.red, 1f);
+            var direction = targetPosition - shooterPosition;
+            var ray = new Ray(shooterPosition, targetPosition - shooterPosition);
             var bulletScale = bullet.transform.localScale;
             if (!Physics.Raycast(ray, out var hit1, bullet.Speed * bullet.LifeTime, 1 << 16))
-                return Vector3.zero;
-            if (Physics.Raycast(ray, out var hit2, bullet.Speed * bullet.LifeTime))
             {
-                return hit1.collider == hit2.collider ? direction : Vector3.zero;
+                return Vector3.zero;
+            }
+
+            if (Physics.SphereCast(ray, bulletScale.x/2, out var hit2, hit1.distance, ~(1 << 16)))
+            {
+                return Vector3.zero;
             }
 
             return direction;

@@ -54,17 +54,16 @@ namespace Game
         {
             if (Hitpoints <= 0)
                 return;
-            
             HitpointsView.SetValue(Hitpoints / HitpointsMax);
-        
-            if (PlayerInput == null)
-                return;
-
-            
         }
 
         private void FixedUpdate()
         {
+            if (Hitpoints <= 0)
+                return;
+            
+            if (PlayerInput == null)
+                return;
             var (moveDirection, viewDirection, shoot) = PlayerInput.CurrentInput();
             Rigidbody.velocity = moveDirection.normalized * Speed;
             transform.rotation = viewDirection;
