@@ -19,46 +19,49 @@ namespace Input
         private Vector3[] _path;
 
         private int _currentIndexPath;
+        private float maxX;
+        private float minX;
+        private float maxZ;
+        private float minZ;
 
-        private Vector3 _targetPosition;
+        //private Vector3 _targetPosition;
 
 
         public override (Vector3 moveDirection, Quaternion viewDirection, bool shoot) CurrentInput()
         {
             var playerPosition = transform.position;
 
-            if (Vector3.Distance(playerPosition, _targetPosition) <= 0.1f)
+            if (Vector3.Distance(playerPosition, _path[_currentIndexPath]) <= 0.1f)
             {
-                _targetPosition = FindNewTargetPosition();
-                var nPath = new NavMeshPath();
-                while(!NavMesh.CalculatePath(playerPosition, _targetPosition, NavMesh.AllAreas, nPath));
-                _path = nPath.corners;
-
-                for (int i = 0; i < _path.Length; i++)
-                    _path[i].y = 0f;
-                _targetPosition.y = 0f;
-                
-                _currentIndexPath = 0;
+                if (++_currentIndexPath >= _path.Length)
+                {
+                    CalculeteNewPath(playerPosition);
+                    _currentIndexPath = 0;
+                }
             }
 
-            if (Vector3.Distance(playerPosition, _path[_currentIndexPath]) <= 0.1f)
-                ++_currentIndexPath;
-
             var moveDirection = _path[_currentIndexPath] - playerPosition;
-            moveDirection.y = 0f;
-
-
             return (moveDirection, Quaternion.LookRotation(moveDirection), false);
+        }
+
+        private void CalculeteNewPath(Vector3 playerPosition)
+        {
+            Vector3 targetPosition;
+            var nPath = new NavMeshPath();
+            do
+            {
+                targetPosition = FindNewTargetPosition();
+            } while (!NavMesh.CalculatePath(playerPosition, targetPosition, NavMesh.AllAreas, nPath));
+
+            _path = nPath.corners;
+
+            for (int i = 0; i < _path.Length; i++)
+                _path[i].y = 0f;
         }
 
         private Vector3 FindNewTargetPosition()
         {
             NavMeshHit hit;
-            var maxX = levelMap.Points.Max(p => Mathf.RoundToInt(p.x));
-            var minX = levelMap.Points.Min(p => Mathf.RoundToInt(p.x));
-
-            var maxZ = levelMap.Points.Max(p => Mathf.RoundToInt(p.z));
-            var minZ = levelMap.Points.Min(p => Mathf.RoundToInt(p.z));
 
             do
             {
@@ -75,7 +78,14 @@ namespace Input
 
         private void Awake()
         {
-            _targetPosition = transform.position;
+            maxX = levelMap.Points.Max(p => Mathf.RoundToInt(p.x));
+            minX = levelMap.Points.Min(p => Mathf.RoundToInt(p.x));
+
+            maxZ = levelMap.Points.Max(p => Mathf.RoundToInt(p.z));
+            minZ = levelMap.Points.Min(p => Mathf.RoundToInt(p.z));
+
+            _path = new[] {transform.position};
+            _currentIndexPath = 0;
         }
     }
 }
