@@ -34,6 +34,7 @@ namespace Editor
 
         private void OnSceneGUI()
         {
+            Debug.Log(Event.current.ToString());
             switch (Event.current.type)
             {
                 case EventType.Layout:
@@ -42,13 +43,18 @@ namespace Editor
                 case EventType.MouseDown:
                 case EventType.MouseDrag:
                 {
-                    if (!Event.current.control)
-                        DrawMap();
-                    else
-                        ErraseMap();
+                    if (Event.current.button == 0)
+                    {
+                        if (!Event.current.control)
+                            DrawMap();
+                        else
+                            ErraseMap();
+                    }
+
                     break;
                 }
             }
+            //Event.current.Use();
         }
 
         private void ErraseMap()
